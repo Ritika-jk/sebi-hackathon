@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAINGUARD - Securing the Chain of Trust</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #16a085;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, #3498db, #2c3e50);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--gradient);
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+        }
+        
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            color: #16a085;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            margin: 30px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #555;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-accent {
+            background: var(--accent);
+        }
+        
+        .btn-accent:hover {
+            background: #138d75;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .panel-header h3 {
+            font-size: 1.4rem;
+        }
+        
+        .panel-body {
+            padding: 20px;
+        }
+        
+        .request-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input, select, textarea {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .consent-request {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .consent-details {
+            margin: 15px 0;
+        }
+        
+        .consent-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .blockchain-view {
+            margin-top: 20px;
+        }
+        
+        .block {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+        }
+        
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .block-hash {
+            font-family: monospace;
+            color: #666;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+        
+        .verification-result {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .success {
+            background: #d5f5e3;
+            color: #145a32;
+        }
+        
+        .failure {
+            background: #fadbd8;
+            color: #922b21;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h1>CHAINGUARD <span>PROTOTYPE</span></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Blockchain</a></li>
+                        <li><a href="#">Consent History</a></li>
+                        <li><a href="#">Settings</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h2>Securing Investor Consent with Blockchain Technology</h2>
+            <p>CHAINGUARD creates an immutable record of investor consent for financial transactions, preventing fraud and unauthorized activities.</p>
+            <a href="#" class="btn btn-accent">View Demo Video</a>
+        </section>
+
+        <div class="dashboard">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-building"></i> Broker Interface</h3>
+                </div>
+                <div class="panel-body">
+                    <h4>Create Consent Request</h4>
+                    <div class="request-form">
+                        <div class="form-group">
+                            <label for="investorId">Investor ID</label>
+                            <input type="text" id="investorId" value="investor_123_hashed" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="brokerId">Broker ID</label>
+                            <input type="text" id="brokerId" value="broker_abc" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="actionType">Action Type</label>
+                            <select id="actionType">
+                                <option value="HIGH_RISK_TRADE">High-Risk Trade</option>
+                                <option value="ACCOUNT_OPENING">Account Opening</option>
+                                <option value="PORTFOLIO_CHANGE">Portfolio Change</option>
+                                <option value="WITHDRAWAL">Withdrawal Request</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="transactionDetails">Transaction Details</label>
+                            <textarea id="transactionDetails">{"stock": "XYZ", "quantity": 1000, "price": 150}</textarea>
+                        </div>
+                        <button class="btn" onclick="createConsentRequest()">Create Consent Request</button>
+                    </div>
+
+                    <div class="blockchain-view">
+                        <h4>Blockchain Status</h4>
+                        <div id="blockchainContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-user"></i> Investor Interface</h3>
+                </div>
+                <div class="panel-body">
+                    <h4>Pending Consent Request</h4>
+                    <div class="consent-request">
+                        <div class="request-details">
+                            <p><strong>Request ID:</strong> <span id="displayRequestId"></span></p>
+                            <p><strong>Broker:</strong> <span id="displayBrokerId"></span></p>
+                            <p><strong>Action:</strong> <span id="displayAction"></span></p>
+                        </div>
+                        <div class="consent-details">
+                            <p><strong>Details:</strong></p>
+                            <pre id="displayDetails"></pre>
+                        </div>
+                        <p><strong>Timestamp:</strong> <span id="displayTimestamp"></span></p>
+                        
+                        <div class="consent-actions">
+                            <button class="btn btn-accent" onclick="signRequest(true)"><i class="fas fa-check"></i> Approve</button>
+                            <button class="btn btn-danger" onclick="signRequest(false)"><i class="fas fa-times"></i> Deny</button>
+                        </div>
+                    </div>
+
+                    <div id="verificationResult" class="verification-result" style="display: none;"></div>
+
+                    <div class="wallet-info">
+                        <h4>Digital Identity Wallet</h4>
+                        <p><strong>Investor ID:</strong> investor_123_hashed</p>
+                        <p><strong>Linked Aadhaar:</strong> •••• •••• •••• 5678</p>
+                        <p><strong>Key Status:</strong> <span style="color: var(--success);">Secure</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>CHAINGUARD Prototype | Securing the Chain of Trust | Built for SEBI Hackathon</p>
+            <p>This is a simulation for demonstration purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simulated blockchain and state
+        let blockchain = [];
+        let currentRequest = null;
+        let privateKey = "secret_key_only_on_investors_phone";
+
+        // Initialize the demo
+        function initDemo() {
+            displayBlockchain();
+        }
+
+        // Create a new consent request (Broker side)
+        function createConsentRequest() {
+            const investorId = document.getElementById('investorId').value;
+            const brokerId = document.getElementById('brokerId').value;
+            const action = document.getElementById('actionType').value;
+            const details = document.getElementById('transactionDetails').value;
+            
+            // Create request object
+            currentRequest = {
+                investorId: investorId,
+                brokerId: brokerId,
+                action: action,
+                details: details,
+                timestamp: new Date().toISOString(),
+                requestId: generateHash(new Date().toISOString() + investorId),
+                investorSignature: null
+            };
+            
+            // Display request in investor panel
+            document.getElementById('displayRequestId').textContent = currentRequest.requestId;
+            document.getElementById('displayBrokerId').textContent = currentRequest.brokerId;
+            document.getElementById('displayAction').textContent = currentRequest.action;
+            document.getElementById('displayDetails').textContent = JSON.stringify(JSON.parse(currentRequest.details), null, 2);
+            document.getElementById('displayTimestamp').textContent = new Date(currentRequest.timestamp).toLocaleString();
+            
+            // Hide previous verification result
+            document.getElementById('verificationResult').style.display = 'none';
+            
+            alert("Consent request created and sent to investor!");
+        }
+
+        // Sign the request (Investor side)
+        function signRequest(approved) {
+            if (!currentRequest) {
+                alert("No pending consent requests!");
+                return;
+            }
+            
+            if (approved) {
+                // Simulate signing process
+                const dataToSign = `${currentRequest.requestId}|${currentRequest.investorId}|${currentRequest.brokerId}|${currentRequest.action}|${currentRequest.timestamp}|${currentRequest.details}`;
+                
+                // In a real implementation, this would use proper cryptography
+                const hmac = CryptoJS.HmacSHA256(dataToSign, privateKey);
+                currentRequest.investorSignature = hmac.toString();
+                
+                // Add to blockchain
+                addToBlockchain(currentRequest);
+                
+                alert("Request approved and added to blockchain!");
+            } else {
+                alert("Request denied. No action taken.");
+                currentRequest = null;
+            }
+        }
+
+        // Add signed request to blockchain
+        function addToBlockchain(signedRequest) {
+            const previousHash = blockchain.length > 0 ? blockchain[blockchain.length - 1].hash : '0';
+            const timestamp = new Date().toISOString();
+            
+            // Create block data
+            const blockData = {
+                data: signedRequest,
+                previousHash: previousHash,
+                timestamp: timestamp
+            };
+            
+            // Calculate hash
+            const dataString = JSON.stringify(blockData.data) + blockData.previousHash + blockData.timestamp;
+            blockData.hash = CryptoJS.SHA256(dataString).toString();
+            
+            // Add to blockchain
+            blockchain.push(blockData);
+            
+            // Update display
+            displayBlockchain();
+            
+            // Verify the transaction
+            verifyConsent(signedRequest.requestId);
+            
+            // Reset current request
+            currentRequest = null;
+        }
+
+        // Verify consent on blockchain
+        function verifyConsent(requestId) {
+            const verificationResult = document.getElementById('verificationResult');
+            
+            // Look for the request in the blockchain
+            const blockWithRequest = blockchain.find(block => block.data.requestId === requestId);
+
+            if (!blockWithRequest) {
+                verificationResult.textContent = "❌ Consent request not found on the blockchain.";
+                verificationResult.className = "verification-result failure";
+                verificationResult.style.display = 'block';
+                return false;
+            }
+
+            if (blockWithRequest.data.investorSignature) {
+                verificationResult.innerHTML = "✅ VERIFICATION SUCCESSFUL: Consent is valid and immutably recorded.";
+                verificationResult.className = "verification-result success";
+                verificationResult.style.display = 'block';
+                return true;
+            } else {
+                verificationResult.innerHTML = "❌ VERIFICATION FAILED: Request was not signed.";
+                verificationResult.className = "verification-result failure";
+                verificationResult.style.display = 'block';
+                return false;
+            }
+        }
+
+        // Display blockchain
+        function displayBlockchain() {
+            const container = document.getElementById('blockchainContainer');
+            container.innerHTML = '<p class="blockchain-info"><strong>Blocks:</strong> ' + blockchain.length + '</p>';
+            
+            if (blockchain.length === 0) {
+                container.innerHTML += '<p class="empty-blockchain">No blocks in the chain yet. Create a consent request to start the blockchain.</p>';
+                return;
+            }
+            
+            // Display each block
+            blockchain.forEach((block, index) => {
+                const blockEl = document.createElement('div');
+                blockEl.className = 'block';
+                
+                blockEl.innerHTML = `
+                    <div class="block-header">
+                        <strong>Block #${index + 1}</strong>
+                        <span>${new Date(block.timestamp).toLocaleString()}</span>
+                    </div>
+                    <p><strong>Previous Hash:</strong> <span class="block-hash">${block.previousHash}</span></p>
+                    <p><strong>Hash:</strong> <span class="block-hash">${block.hash}</span></p>
+                    <p><strong>Request ID:</strong> ${block.data.requestId}</p>
+                    <p><strong>Action:</strong> ${block.data.action}</p>
+                    <p><strong>Signed:</strong> ${block.data.investorSignature ? '✅ Yes' : '❌ No'}</p>
+                `;
+                
+                container.appendChild(blockEl);
+            });
+        }
+
+        // Generate a simple hash (for demo purposes)
+        function generateHash(input) {
+            return CryptoJS.SHA256(input).toString().substring(0, 16);
+        }
+
+        // Initialize the demo when page loads
+        window.onload = initDemo;
+    </script>
+
+    <!-- Include CryptoJS for hashing functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</body>
+</html>
